@@ -14,13 +14,13 @@ main:
         LDR   R1, =UART0_ADDR         @ Load R1 with UART0_ADDR.
         LDR   R1, [R1]
         MOV   R2, #90                 @ 90 ASCII Characters to loop through.
-ploop:  ADD   R0, R0, #1              @ Advance to next character.
+ploop:  BL    getc                    @ Advance to next character.
         BL    putc
         SUBS  R2, R2, #1              @ Decrement counter.
         BNE   ploop
         B     .
 
-putc:   
+putc:
 /*  Prints the contents of R0 out of the UART pointed to by R1.
  *  Preconditions:
  *    R0 contains the character to send over the UART.
@@ -29,10 +29,26 @@ putc:
  */
         PUSH  {R2, R3}                  @ Preserve used registers in stack.
         MOV   R3, #UART_TXFF_MASK
-wait:   LDR   R2, [R1,#UART_FR_OFFSET]  @ Check [R1:UART_FR_OFFSET] & UART_TXFF_MASK == 0.
+pwait:  LDR   R2, [R1,#UART_FR_OFFSET]  @ Check [R1:UART_FR_OFFSET] & UART_TXFF_MASK == 0.
         TST   R2, R3
-        BNE   wait                      @ Loop till UART0 is ready to TX.
-        STR   R0, [R1]                  @ Store value R0 in [R1:UART_DR_OFFSET].
+        BNE   pwait                     @ Loop till UART0 is ready to TX.
+        STR   R0, [R1,#UART_DR_OFFSET]  @ Store value R0 in [R1:UART_DR_OFFSET].
+        POP   {R2, R3}                  @ Return used registers from stack.
+        BX    LR                        @ Return to main.
+
+getc:
+/*  Prints the contents of R0 out of the UART pointed to by R1.
+ *  Preconditions:
+ *    R1 contains the address of the UART to send the character over.
+ *  Modifies:
+ *    R0 will contain the value in the UART buffer.
+ */
+        PUSH  {R2, R3}                  @ Preserve used registers in stack.
+        MOV   R3, #UART_RXFE_MASK
+gwait:  LDR   R2, [R1,#UART_FR_OFFSET]  @ Check [R1:UART_FR_OFFSET] & UART_TXFF_MASK == 0.
+        TST   R2, R3
+        BNE   gwait                     @ Loop till UART0 is ready to TX.
+        LDR   R0, [R1,#UART_DR_OFFSET]  @ Store value R0 in [R1:UART_DR_OFFSET].
         POP   {R2, R3}                  @ Return used registers from stack.
         BX    LR                        @ Return to main.
 

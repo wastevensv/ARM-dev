@@ -4,7 +4,7 @@ This is a development environment that I use for learning GNU Assembler syntax f
 ## Folders
 * hello - (in C) Prints Hello World over the UART.
 * echo - (in C) Takes in a character over UART, outputs character of opposite case over UART.
-* uart - Outputs printable ASCII characters over UART. Demonstrates loops and subroutines in ARM Assembly.
+* uart - Echoes character received on UART back out.Uses custom getc/putc subroutines. Demonstrates loops and subroutines in ARM Assembly.
 
 ## Dependencies
 * qemu
