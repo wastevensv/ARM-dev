@@ -14,7 +14,7 @@ main:
         LDR   R1, =UART0_ADDR         @ Load R1 with UART0_ADDR.
         LDR   R1, [R1]
         MOV   R2, #90                 @ 90 ASCII Characters to loop through.
-ploop:  BL    getc                    @ Advance to next character.
+ploop:  ADD   R0, R0, #1              @ Advance to next character.
         BL    putc
         SUBS  R2, R2, #1              @ Decrement counter.
         BNE   ploop
