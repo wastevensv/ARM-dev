@@ -3,7 +3,7 @@ This is a development environment that I use for learning GNU Assembler syntax f
 
 ## Folders
 * hello - (only in C) Prints Hello World over the UART.
-* case - (only in C) Takes in a character over UART, outputs character of opposite case over UART.
+* case - (also in C) Takes in a character over UART, outputs character of opposite case over UART.
 * echo - (also in C) Takes in a character over UART, outputs character over UART.
 * ascii - Outputs printable ASCII characters over UART. Demonstrates loops and subroutines in ARM Assembly.
 
